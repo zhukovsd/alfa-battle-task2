@@ -2,6 +2,8 @@ package com.zhukovsd.alfabattle.task2.analytics;
 
 import com.zhukovsd.alfabattle.task2.analytics.stats.UserAnalyticsStats;
 import com.zhukovsd.alfabattle.task2.analytics.stats.UsersAnalyticsStats;
+import com.zhukovsd.alfabattle.task2.analytics.templates.UserTemplates;
+import com.zhukovsd.alfabattle.task2.analytics.templates.UsersTemplates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ public class AnalyticsController {
 
     @Autowired
     UsersAnalyticsStats stats;
+
+    @Autowired
+    UsersTemplates templates;
 
     @GetMapping(value = "analytic")
     public List<UserAnalytics> getAnalytic() {
@@ -42,10 +47,18 @@ public class AnalyticsController {
         return stats.get(userId);
     }
 
+    @GetMapping(value = "analytic/{userId}/templates")
+    public UserTemplates getUserAnalyticTemplates(@PathVariable("userId") String userId) {
+        if (!templates.containsKey(userId)) {
+            throw new UserNotFoundException();
+        }
+
+        return templates.get(userId);
+    }
+
     @ExceptionHandler(value = UserNotFoundException.class)
     public ResponseEntity<ErrorJsonResponse> handleException(Exception e) {
         return new ResponseEntity<ErrorJsonResponse>(new ErrorJsonResponse("user not found"), HttpStatus.NOT_FOUND);
     }
-
 
 }

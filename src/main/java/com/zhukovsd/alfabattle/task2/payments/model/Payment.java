@@ -13,7 +13,11 @@ package com.zhukovsd.alfabattle.task2.payments.model;
 
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Objects;
 
 public class Payment {
 
@@ -32,7 +36,23 @@ public class Payment {
         this.userId = userId;
         this.recipientId = recipientId;
         this.desc = desc;
-        this.amount = new BigDecimal(amount);
+        this.amount = new BigDecimal(amount).setScale(2, RoundingMode.HALF_EVEN);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Payment payment = (Payment) o;
+        return categoryId == payment.categoryId &&
+                userId.equals(payment.userId) &&
+                recipientId.equals(payment.recipientId) &&
+                amount.equals(payment.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(categoryId, userId, recipientId, amount);
     }
 
     public int getCategoryId() {
@@ -72,6 +92,6 @@ public class Payment {
     }
 
     public void setAmount(double amount) {
-        this.amount = new BigDecimal(amount);
+        this.amount = new BigDecimal(amount).setScale(2, RoundingMode.HALF_EVEN);
     }
 }
