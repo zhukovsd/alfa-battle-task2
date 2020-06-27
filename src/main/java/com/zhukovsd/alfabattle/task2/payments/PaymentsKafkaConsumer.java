@@ -1,6 +1,8 @@
 package com.zhukovsd.alfabattle.task2.payments;
 
 import com.zhukovsd.alfabattle.task2.analytics.UsersAnalytics;
+import com.zhukovsd.alfabattle.task2.analytics.stats.UserAnalyticsStats;
+import com.zhukovsd.alfabattle.task2.analytics.stats.UsersAnalyticsStats;
 import com.zhukovsd.alfabattle.task2.payments.model.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -15,6 +17,9 @@ public class PaymentsKafkaConsumer {
 
     @Autowired
     UsersAnalytics analytics;
+
+    @Autowired
+    UsersAnalyticsStats stats;
 
     @KafkaListener(
             topicPartitions = @TopicPartition(
@@ -36,6 +41,8 @@ public class PaymentsKafkaConsumer {
         }
 
         System.out.println("Payments processed");
+
+        stats.recalcStats(analytics);
 
 //        Thread.sleep(10000);
 

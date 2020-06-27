@@ -3,6 +3,7 @@ package com.zhukovsd.alfabattle.task2.analytics;
 import com.zhukovsd.alfabattle.task2.payments.model.Payment;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -24,7 +25,9 @@ public class UserAnalytics {
     }
 
     private void recalcTotalSum() {
-        this.totalSum = this.analyticInfo.values().stream().map(userPaymentList -> userPaymentList.sum)
+         BigDecimal totalSum = this.analyticInfo.values().stream().map(userPaymentList -> userPaymentList.sum)
                 .reduce(new BigDecimal(0), BigDecimal::add);
+
+         this.totalSum = totalSum.setScale(2, RoundingMode.HALF_EVEN);
     }
 }
